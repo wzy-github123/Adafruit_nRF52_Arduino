@@ -5,6 +5,62 @@ menu.usb_cdc=Serial (USB-CDC)
 menu.lbm_custom=Customize LoRaWAN modem
 menu.power_supply_grove=Grove power supply
 
+# -----------------------------------
+# Seeed Tracker T10000 E LoRaWAN
+# -----------------------------------
+tracker_t1000_e_lorawan.name=Seeed Tracker T10000 E LoRaWAN
+
+# Upload
+tracker_t1000_e_lorawan.bootloader.tool=bootburn
+tracker_t1000_e_lorawan.upload.tool=nrfutil
+tracker_t1000_e_lorawan.upload.protocol=nrfutil
+tracker_t1000_e_lorawan.upload.use_1200bps_touch=true
+tracker_t1000_e_lorawan.upload.wait_for_upload_port=true
+tracker_t1000_e_lorawan.upload_port.0.vid=0x2886
+tracker_t1000_e_lorawan.upload_port.0.pid=0x8057
+tracker_t1000_e_lorawan.upload_port.1.vid=0x2886
+tracker_t1000_e_lorawan.upload_port.1.pid=0x0057
+
+## Flash 0x000c_d000 - 0x0002_7000
+tracker_t1000_e_lorawan.upload.maximum_size=679936
+## RAM   0x2004_0000 - 0x2000_6000
+tracker_t1000_e_lorawan.upload.maximum_data_size=237568
+
+# Build
+tracker_t1000_e_lorawan.build.mcu=cortex-m4
+tracker_t1000_e_lorawan.build.f_cpu=64000000
+tracker_t1000_e_lorawan.build.board=TRACKER_T1000_E_LORAWAN
+tracker_t1000_e_lorawan.build.core=nRF5
+tracker_t1000_e_lorawan.build.variant=Seeed_Tracker_T1000_E_LoRaWAN
+tracker_t1000_e_lorawan.build.usb_manufacturer="Seeed"
+tracker_t1000_e_lorawan.build.usb_product="Tracker T10000 E LoRaWAN"
+tracker_t1000_e_lorawan.build.extra_flags=-DNRF52840_XXAA {build.flags.usb} -DSEGGER_RTT_MAX_NUM_UP_BUFFERS=2 -DSEGGER_RTT_MAX_NUM_DOWN_BUFFERS=2 -DSEGGER_RTT_MODE_DEFAULT=SEGGER_RTT_MODE_NO_BLOCK_SKIP -DBUFFER_SIZE_UP=2048 -DBUFFER_SIZE_DOWN=4 -DNRFX_NVMC_ENABLED=1 -DNRFX_RNG_ENABLED=1 -DNRFX_RTC_ENABLED=1 -DNRFX_RTC2_ENABLED=1 -DNRFX_RTC_DEFAULT_CONFIG_IRQ_PRIORITY=6 -DNRFX_TIMER_ENABLED=1 -DNRFX_TIMER2_ENABLED=1 -DNRFX_WDT_ENABLED=1 -DNRFX_WDT0_ENABLED=1 -DLR11XX -DLR11XX_TRANSCEIVER -DUSE_LR11XX_CE -DENABLE_MODEM_GNSS_FEATURE -DRP2_103 -DREGION_AS_923 -DREGION_AU_915 -DREGION_CN_470 -DREGION_CN_470_RP_1_0 -DREGION_EU_868 -DREGION_IN_865 -DREGION_KR_920 -DREGION_RU_864 -DREGION_US_915 -DREGION_WW2G4 -DWW2G4_SINGLE_DATARATE -DSMTC_MULTICAST -DADD_SMTC_STREAM -DADD_SMTC_FILE_UPLOAD -DADD_SMTC_ALC_SYNC -DMODEM_HAL_DBG_TRACE=1 -DMODEM_HAL_DEEP_DBG_TRACE=0 -DMODEM_HAL_DBG_TRACE_RP=0 -DMODEM_HAL_DBG_TRACE_COLOR=0 -DTASK_EXTENDED_1 -DTASK_EXTENDED_2 -DLR11XX_DISABLE_WARNINGS -DMW_DBG_TRACE=1 -DMW_DBG_TRACE_COLOR=0 -DT1000E_TRACE_MAX_LENGTH=256
+tracker_t1000_e_lorawan.build.ldscript=nrf52840_s140_v7.ld
+tracker_t1000_e_lorawan.build.vid=0x2886
+tracker_t1000_e_lorawan.build.pid=0x8057
+tracker_t1000_e_lorawan.build.uf2_enable=true
+
+# SoftDevice Menu
+tracker_t1000_e_lorawan.menu.softdevice.s140v7=S140 7.3.0
+tracker_t1000_e_lorawan.menu.softdevice.s140v7.build.sd_name=s140
+tracker_t1000_e_lorawan.menu.softdevice.s140v7.build.sd_version=7.3.0
+tracker_t1000_e_lorawan.menu.softdevice.s140v7.build.sd_fwid=0x0123
+
+# Print Port Menu
+tracker_t1000_e_lorawan.menu.debug_output.serial=Serial (USB-CDC)
+tracker_t1000_e_lorawan.menu.debug_output.serial.build.logger_flags=-DCFG_LOGGER=0
+tracker_t1000_e_lorawan.menu.debug_output.serial1=Serial1 (UART)
+tracker_t1000_e_lorawan.menu.debug_output.serial1.build.logger_flags=-DCFG_LOGGER=1
+tracker_t1000_e_lorawan.menu.debug_output.rtt=Segger RTT
+tracker_t1000_e_lorawan.menu.debug_output.rtt.build.logger_flags=-DCFG_LOGGER=2
+tracker_t1000_e_lorawan.menu.debug_output.none=None
+tracker_t1000_e_lorawan.menu.debug_output.none.build.logger_flags=-DCFG_LOGGER=3
+
+# Serial (USB-CDC)
+tracker_t1000_e_lorawan.menu.usb_cdc.enable=Enable
+tracker_t1000_e_lorawan.menu.usb_cdc.disable=Disable
+tracker_t1000_e_lorawan.menu.usb_cdc.disable.build.flags.usb=
+
 # ----------------------------------
 # Seeed XIAO nRF52840
 # ----------------------------------
