@@ -69,6 +69,16 @@ static void loop_task(void* arg)
   if(!Serial1) Serial1.begin(115200);
 #endif
 
+#elif defined(ARDUINO_TRACKER_T1000_E_LORAWAN)
+
+#if CFG_LOGGER == 0 && USE_TINYUSB
+  // If Serial is not begin(), call it to avoid hard fault
+  if(!Serial) Serial.begin(115200);
+#elif CFG_LOGGER == 1
+  // If Serial1 is not begin(), call it to avoid hard fault
+  if(!Serial1) Serial1.begin(115200);
+#endif
+
 #else
 
 #error "Unsupported board"
@@ -157,7 +167,7 @@ int _write (int fd, const void *buf, size_t count)
     ret = Serial1.write((const uint8_t *) buf, count);
   }
 
-#elif CFG_LOGGER == 0
+#elif CFG_LOGGER == 0 && USE_TINYUSB
 
   if ( Serial )
   {

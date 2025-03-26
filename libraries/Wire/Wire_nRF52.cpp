@@ -29,7 +29,7 @@ extern "C" {
 
 #include "Wire.h"
 
-#if defined(ARDUINO_Seeed_XIAO_nRF52840) || defined(ARDUINO_Seeed_XIAO_nRF52840_Sense) || defined(ARDUINO_Seeed_XIAO_nRF52840_Plus) || defined(ARDUINO_Seeed_XIAO_nRF52840_Sense_Plus)
+#if defined(ARDUINO_Seeed_XIAO_nRF52840) || defined(ARDUINO_Seeed_XIAO_nRF52840_Sense) || defined(ARDUINO_Seeed_XIAO_nRF52840_Plus) || defined(ARDUINO_Seeed_XIAO_nRF52840_Sense_Plus) || defined(ARDUINO_TRACKER_T1000_E_LORAWAN)
 #include <Adafruit_TinyUSB.h> // for Serial
 #elif defined(ARDUINO_WIO_TRACKER_1110)
 #else
