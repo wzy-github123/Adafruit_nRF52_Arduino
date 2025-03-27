@@ -38,7 +38,7 @@ tracker_t1000_e_lorawan.build.extra_flags=-DNRF52840_XXAA {build.flags.usb} -DSE
 tracker_t1000_e_lorawan.build.ldscript=nrf52840_s140_v7.ld
 tracker_t1000_e_lorawan.build.vid=0x2886
 tracker_t1000_e_lorawan.build.pid=0x8057
-tracker_t1000_e_lorawan.build.uf2_enable=true
+# tracker_t1000_e_lorawan.build.uf2_enable=true
 
 # SoftDevice Menu
 tracker_t1000_e_lorawan.menu.softdevice.s140v6=S140 7.3.0
