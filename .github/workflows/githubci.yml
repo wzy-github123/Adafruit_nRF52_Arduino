@@ -72,7 +72,15 @@ jobs:
 
         # TODO temporarily remove TinyUSB pre-1.0.0 version install by arduino-cli
         # rm -r $HOME/Arduino/libraries/Adafruit_TinyUSB_Library
-
+        
+        while read -r libname version; do
+            if [[ ! -z "$version" ]]; then
+              arduino-cli lib install "$libname@$version"
+            else
+              arduino-cli lib install "$libname"
+            fi
+        done < <(arduino-cli lib list | awk -F'\t' '{print $1, $2}')
+          
         # Library summary
         arduino-cli lib list
 
