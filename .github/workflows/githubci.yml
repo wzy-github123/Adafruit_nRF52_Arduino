@@ -27,10 +27,11 @@ jobs:
         run: |
           pip3 install adafruit-nrfutil
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          echo "$HOME/bin" >> $GITHUB_PATH  # 添加 Arduino CLI 到 PATH
-          echo "export PATH=$HOME/bin:$PATH" >> ~/.bashrc  # 确保 PATH 更新
-          source ~/.bashrc
-          arduino-cli version  # 验证是否安装成功
+          ARDUINO_CLI_PATH="/home/runner/work/Adafruit_nRF52_Arduino/Adafruit_nRF52_Arduino/bin"
+          echo "export PATH=$ARDUINO_CLI_PATH:$PATH" >> $GITHUB_ENV
+          source $GITHUB_ENV
+          which arduino-cli
+          arduino-cli version  # 确保能找到 Arduino CLI
 
       - name: Install BSP and Libraries
         run: |
