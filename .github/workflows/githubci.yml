@@ -66,8 +66,9 @@ jobs:
         # TODO temporarily remove TinyUSB pre-1.0.0 version install by arduino-cli
         rm -r $HOME/Arduino/libraries/Adafruit_TinyUSB_Library
         
-        rm -r $HOME/Arduino/libraries/SdFat*
-        rm -r $HOME/Arduino/libraries/Adafruit_SPIFlash*
+        # rm -r $HOME/Arduino/libraries/SdFat*
+        # rm -r $HOME/Arduino/libraries/Adafruit_SPIFlash*
+        rm -rf /home/runner/work/Adafruit_nRF52_Arduino/Adafruit_nRF52_Arduino/libraries/SdFat
         
         # Library summary
         arduino-cli lib list
