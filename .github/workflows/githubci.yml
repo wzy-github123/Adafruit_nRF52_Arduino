@@ -14,7 +14,6 @@ jobs:
           - 'wio_tracker_1110'
           - 'xiaonRF52840Plus'
           - 'xiaonRF52840SensePlus'
-          - 'xiaonRF52840SensePlus'
     runs-on: ubuntu-latest
     
     steps:
@@ -45,9 +44,11 @@ jobs:
           BSP_URL="https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json"
 
           # 更新 Arduino CLI 索引
+          echo "# 更新 Arduino CLI 索引" >> $GITHUB_ENV
           arduino-cli core update-index --additional-urls $BSP_URL
 
           # 安装 Seeeduino nRF52 开发核心
+          echo "# 安装 Seeeduino nRF52 开发核心" >> $GITHUB_ENV
           arduino-cli core install Seeeduino:nrf52 --additional-urls $BSP_URL
 
           # 自动安装库（按照子仓库的版本）
