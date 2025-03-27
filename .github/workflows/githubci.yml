@@ -1,17 +1,22 @@
 name: Build Examples
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: [pull_request, push]
 
 jobs:
   build:
+    strategy:
+        fail-fast: false
+        matrix:
+          arduino-platform:
+          # Alphabetical order
+          - 'xiaonRF52840'
+          - 'xiaonRF52840Sense'
+          - 'wio_tracker_1110'
+          - 'xiaonRF52840Plus'
+          - 'xiaonRF52840SensePlus'
+          - 'xiaonRF52840SensePlus'
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -21,16 +26,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          submodules: true  # 确保拉取子模块
+          submodules: true  
 
       - name: Install Arduino CLI and Tools
         run: |
           pip3 install adafruit-nrfutil
-           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          echo "$HOME/bin" >> $GITHUB_PATH  # 直接追加 PATH
-          source $GITHUB_PATH
-          which arduino-cli
-          arduino-cli version
+          # make all our directories we need for files and libraries
+          mkdir $HOME/.arduino15
+          mkdir $HOME/.arduino15/packages
+          mkdir $HOME/Arduino
+          mkdir $HOME/Arduino/libraries
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
 
       - name: Install BSP and Libraries
         run: |
