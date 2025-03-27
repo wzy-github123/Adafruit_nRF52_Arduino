@@ -41,10 +41,10 @@ tracker_t1000_e_lorawan.build.pid=0x8057
 tracker_t1000_e_lorawan.build.uf2_enable=true
 
 # SoftDevice Menu
-tracker_t1000_e_lorawan.menu.softdevice.s140v7=S140 7.3.0
-tracker_t1000_e_lorawan.menu.softdevice.s140v7.build.sd_name=s140
-tracker_t1000_e_lorawan.menu.softdevice.s140v7.build.sd_version=7.3.0
-tracker_t1000_e_lorawan.menu.softdevice.s140v7.build.sd_fwid=0x0123
+tracker_t1000_e_lorawan.menu.softdevice.s140v6=S140 7.3.0
+tracker_t1000_e_lorawan.menu.softdevice.s140v6.build.sd_name=s140
+tracker_t1000_e_lorawan.menu.softdevice.s140v6.build.sd_version=7.3.0
+tracker_t1000_e_lorawan.menu.softdevice.s140v6.build.sd_fwid=0x0123
 
 # Print Port Menu
 tracker_t1000_e_lorawan.menu.debug_output.serial=Serial (USB-CDC)
