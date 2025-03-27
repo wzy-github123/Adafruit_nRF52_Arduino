@@ -48,10 +48,6 @@ jobs:
         arduino-cli core update-index
         arduino-cli core update-index --additional-urls $BSP_URL
         arduino-cli core install Seeeduino:nrf52 --additional-urls $BSP_URL
-
-        # Library summary
-        echo "Arduino Core Installed:"
-        arduino-cli core list
         
         # Repalce release BSP with our code
         BSP_VERSION=`eval ls $HOME/$BSP_PATH`
@@ -59,25 +55,19 @@ jobs:
         ln -s $GITHUB_WORKSPACE $HOME/$BSP_PATH/$BSP_VERSION
 
         # Install library dependency
-        # arduino-cli lib install "Adafruit AHRS" "Adafruit APDS9960 Library" "Adafruit Arcada Library" "Adafruit BMP280 Library" "Adafruit Circuit Playground" "Adafruit EPD" "Adafruit GFX Library" "Adafruit HX8357 Library" "Adafruit ILI9341" "Adafruit LIS3MDL" "Adafruit LSM6DS" "Adafruit NeoPixel" "Adafruit NeoMatrix" "Adafruit Sensor Calibration" "Adafruit SHT31 Library" "Adafruit SSD1306" "Adafruit ST7735 and ST7789 Library" "SdFat - Adafruit Fork"
-        # arduino-cli lib install "MIDI Library"
-        
-        while IFS='@' read -r libname version; do
-          if [[ -n "$version" ]]; then
-            arduino-cli lib install "$libname@$version"
-          else
-            arduino-cli lib install "$libname"
-          fi
-        done < libraries.txt       
-        
+        arduino-cli lib install "Adafruit AHRS" "Adafruit APDS9960 Library" "Adafruit Arcada Library" "Adafruit BMP280 Library" "Adafruit Circuit Playground" "Adafruit EPD" "Adafruit GFX Library" "Adafruit HX8357 Library" "Adafruit ILI9341" "Adafruit LIS3MDL" "Adafruit LSM6DS" "Adafruit NeoPixel" "Adafruit NeoMatrix" "Adafruit Sensor Calibration" "Adafruit SHT31 Library" "Adafruit SSD1306" "Adafruit ST7735 and ST7789 Library" "SdFat - Adafruit Fork"
+        arduino-cli lib install "MIDI Library"
 
         # TODO use firmata master to prevent build error with gcc v9 (should be remove after 2.5.9 is released)
         # https://github.com/firmata/arduino/pull/438
         git clone --depth 1 https://github.com/firmata/arduino.git $HOME/Arduino/libraries/firmata
 
         # TODO temporarily remove TinyUSB pre-1.0.0 version install by arduino-cli
-        # rm -r $HOME/Arduino/libraries/Adafruit_TinyUSB_Library
-
+        rm -r $HOME/Arduino/libraries/Adafruit_TinyUSB_Library
+        
+        rm -r $HOME/Arduino/libraries/SdFat*
+        rm -r $HOME/Arduino/libraries/Adafruit_SPIFlash*
+        
         # Library summary
         arduino-cli lib list
 
