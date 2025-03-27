@@ -39,10 +39,17 @@ jobs:
           echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
 
       - name: Install BSP and Libraries
+        env:
+          BSP_URL: https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
+          BSP_PATH: .arduino15/packages/Seeeduino/hardware/nrf52
+          
         run: |
-          # BSP URL for Seeed nRF52
-          BSP_URL="https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json"
-
+          # 初始化 Arduino CLI
+          arduino-cli config init
+          
+          # 更新 Arduino CLI 索引
+          arduino-cli core update-index
+          
           # 更新 Arduino CLI 索引
           echo "# 更新 Arduino CLI 索引" >> $GITHUB_ENV
           arduino-cli core update-index --additional-urls $BSP_URL
