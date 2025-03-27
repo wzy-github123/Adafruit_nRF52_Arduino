@@ -1,72 +1,72 @@
-name: Build
+name: Build Examples
 
-on: [pull_request, push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        arduino-platform:
-        # Alphabetical order
-        - 'xiaonRF52840'
-        - 'xiaonRF52840Sense'
-        - 'wio_tracker_1110'
-        - 'xiaonRF52840Plus'
-        - 'xiaonRF52840SensePlus'
-
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Setup Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: '3.x'
-        
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        submodules: 'true'
-        
-    - name: Install Arduino CLI and Tools
-      run: |
-        pip3 install adafruit-nrfutil
-        # make all our directories we need for files and libraries
-        mkdir $HOME/.arduino15
-        mkdir $HOME/.arduino15/packages
-        mkdir $HOME/Arduino
-        mkdir $HOME/Arduino/libraries
-        curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-        echo $GITHUB_WORKSPACE/bin >> $GITHUB_PATH
-        
-    - name: Install BSP and Libraries
-      env:
-        BSP_URL: https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
-        BSP_PATH: .arduino15/packages/Seeeduino/hardware/nrf52
-      run: |
-        arduino-cli config init
-        arduino-cli core update-index
-        arduino-cli core update-index --additional-urls $BSP_URL
-        arduino-cli core install Seeeduino:nrf52 --additional-urls $BSP_URL
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
 
-        # Repalce release BSP with our code
-        BSP_VERSION=`eval ls $HOME/$BSP_PATH`
-        rm -r $HOME/$BSP_PATH/*
-        ln -s $GITHUB_WORKSPACE $HOME/$BSP_PATH/$BSP_VERSION
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # 确保拉取子模块
 
-        # Install library dependency
-        arduino-cli lib install "Adafruit AHRS" "Adafruit APDS9960 Library" "Adafruit Arcada Library" "Adafruit BMP280 Library" "Adafruit Circuit Playground" "Adafruit EPD" "Adafruit GFX Library" "Adafruit HX8357 Library" "Adafruit ILI9341" "Adafruit LIS3MDL" "Adafruit LSM6DS" "Adafruit NeoPixel" "Adafruit NeoMatrix" "Adafruit Sensor Calibration" "Adafruit SHT31 Library" "Adafruit SSD1306" "Adafruit ST7735 and ST7789 Library" "SdFat - Adafruit Fork"
-        arduino-cli lib install "MIDI Library"
-        
-        # TODO use firmata master to prevent build error with gcc v9 (should be remove after 2.5.9 is released)
-        # https://github.com/firmata/arduino/pull/438
-        git clone --depth 1 https://github.com/firmata/arduino.git $HOME/Arduino/libraries/firmata
+      - name: Install Arduino CLI and Tools
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo "$HOME/bin" >> $GITHUB_PATH
+          arduino-cli version
 
-        # TODO temporarily remove TinyUSB pre-1.0.0 version install by arduino-cli
-        rm -r $HOME/Arduino/libraries/Adafruit_TinyUSB_Library
+      - name: Install BSP and Libraries
+        run: |
+          # BSP URL for Seeed nRF52
+          BSP_URL="https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json"
 
-        # Library summary
-        arduino-cli lib list
+          # 更新 Arduino CLI 索引
+          arduino-cli core update-index --additional-urls $BSP_URL
 
-    - name: Build examples
-      run: python3 tools/build_all.py ${{ matrix.arduino-platform }}
+          # 安装 Seeeduino nRF52 开发核心
+          arduino-cli core install Seeeduino:nrf52 --additional-urls $BSP_URL
+
+          # 自动安装库（按照子仓库的版本）
+          while read -r libname version; do
+            if [[ ! -z "$version" ]]; then
+              arduino-cli lib install "$libname@$version"
+            else
+              arduino-cli lib install "$libname"
+            fi
+          done < <(arduino-cli lib list | awk -F'\t' '{print $1, $2}')
+
+      - name: Get Supported Boards
+        id: boards
+        run: |
+          # 获取支持的开发板名称
+          arduino-cli board listall | grep "Seeeduino:nrf52" | awk -F ' ' '{print $1}' > supported_boards.txt
+          echo "BOARDS=$(cat supported_boards.txt | tr '\n' ' ')" >> $GITHUB_ENV
+
+      - name: Build Examples
+        run: |
+          # 遍历支持的开发板，编译 examples
+          for board in $BOARDS; do
+            echo "Building for $board..."
+            for example in $(find examples -name "*.ino"); do
+              echo "Compiling: $example for $board"
+              arduino-cli compile --fqbn $board $example || exit 1
+            done
+          done
+
+     # - name: Build examples
+     #   run: python3 tools/build_all.py ${{ matrix.arduino-platform }}
+          
