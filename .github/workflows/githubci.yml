@@ -49,6 +49,10 @@ jobs:
         arduino-cli core update-index --additional-urls $BSP_URL
         arduino-cli core install Seeeduino:nrf52 --additional-urls $BSP_URL
 
+        # Library summary
+        echo "arduino-cli core--------------------"
+        arduino-cli lib list
+        
         # Repalce release BSP with our code
         BSP_VERSION=`eval ls $HOME/$BSP_PATH`
         rm -r $HOME/$BSP_PATH/*
@@ -58,6 +62,10 @@ jobs:
         arduino-cli lib install "Adafruit AHRS" "Adafruit APDS9960 Library" "Adafruit Arcada Library" "Adafruit BMP280 Library" "Adafruit Circuit Playground" "Adafruit EPD" "Adafruit GFX Library" "Adafruit HX8357 Library" "Adafruit ILI9341" "Adafruit LIS3MDL" "Adafruit LSM6DS" "Adafruit NeoPixel" "Adafruit NeoMatrix" "Adafruit Sensor Calibration" "Adafruit SHT31 Library" "Adafruit SSD1306" "Adafruit ST7735 and ST7789 Library" "SdFat - Adafruit Fork"
         arduino-cli lib install "MIDI Library"
         
+        # Library summary
+        echo "arduino-cli lib install--------------------"
+        arduino-cli lib list
+
         # TODO use firmata master to prevent build error with gcc v9 (should be remove after 2.5.9 is released)
         # https://github.com/firmata/arduino/pull/438
         git clone --depth 1 https://github.com/firmata/arduino.git $HOME/Arduino/libraries/firmata
