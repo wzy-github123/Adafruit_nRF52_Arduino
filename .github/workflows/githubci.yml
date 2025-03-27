@@ -61,6 +61,13 @@ jobs:
         # Install library dependency
         # arduino-cli lib install "Adafruit AHRS" "Adafruit APDS9960 Library" "Adafruit Arcada Library" "Adafruit BMP280 Library" "Adafruit Circuit Playground" "Adafruit EPD" "Adafruit GFX Library" "Adafruit HX8357 Library" "Adafruit ILI9341" "Adafruit LIS3MDL" "Adafruit LSM6DS" "Adafruit NeoPixel" "Adafruit NeoMatrix" "Adafruit Sensor Calibration" "Adafruit SHT31 Library" "Adafruit SSD1306" "Adafruit ST7735 and ST7789 Library" "SdFat - Adafruit Fork"
         # arduino-cli lib install "MIDI Library"
+        while read -r libname version; do
+          if [[ ! -z "$version" ]]; then
+            arduino-cli lib install "$libname@$version"
+          else
+            arduino-cli lib install "$libname"
+          fi
+        done < <(arduino-cli lib list | awk -F'\t' '{print $1, $2}')       
         
         # Library summary
         echo "arduino-cli lib install--------------------"
@@ -72,15 +79,7 @@ jobs:
 
         # TODO temporarily remove TinyUSB pre-1.0.0 version install by arduino-cli
         # rm -r $HOME/Arduino/libraries/Adafruit_TinyUSB_Library
-        
-        while read -r libname version; do
-            if [[ ! -z "$version" ]]; then
-              arduino-cli lib install "$libname@$version"
-            else
-              arduino-cli lib install "$libname"
-            fi
-        done < <(arduino-cli lib list | awk -F'\t' '{print $1, $2}')
-          
+
         # Library summary
         arduino-cli lib list
 
