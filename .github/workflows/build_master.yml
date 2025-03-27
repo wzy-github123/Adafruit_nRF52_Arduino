@@ -1,0 +1,72 @@
+name: Build Examples
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # 确保拉取子模块
+
+      - name: Install Arduino CLI and Tools
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo "$HOME/bin" >> $GITHUB_PATH
+          arduino-cli version
+
+      - name: Install BSP and Libraries
+        run: |
+          # BSP URL for Seeed nRF52
+          BSP_URL="https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json"
+
+          # 更新 Arduino CLI 索引
+          arduino-cli core update-index --additional-urls $BSP_URL
+
+          # 安装 Seeeduino nRF52 开发核心
+          arduino-cli core install Seeeduino:nrf52 --additional-urls $BSP_URL
+
+          # 自动安装库（按照子仓库的版本）
+          while read -r libname version; do
+            if [[ ! -z "$version" ]]; then
+              arduino-cli lib install "$libname@$version"
+            else
+              arduino-cli lib install "$libname"
+            fi
+          done < <(arduino-cli lib list | awk -F'\t' '{print $1, $2}')
+
+      - name: Get Supported Boards
+        id: boards
+        run: |
+          # 获取支持的开发板名称
+          arduino-cli board listall | grep "Seeeduino:nrf52" | awk -F ' ' '{print $1}' > supported_boards.txt
+          echo "BOARDS=$(cat supported_boards.txt | tr '\n' ' ')" >> $GITHUB_ENV
+
+      - name: Build Examples
+        run: |
+          # 遍历支持的开发板，编译 examples
+          for board in $BOARDS; do
+            echo "Building for $board..."
+            for example in $(find examples -name "*.ino"); do
+              echo "Compiling: $example for $board"
+              arduino-cli compile --fqbn $board $example || exit 1
+            done
+          done
+
+     # - name: Build examples
+     #   run: python3 tools/build_all.py ${{ matrix.arduino-platform }}
+          
