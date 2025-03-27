@@ -33,6 +33,8 @@ def build_examples(variant):
     all_examples = []
     if variant == 'wio_tracker_1110':
         all_examples += list(glob.iglob('libraries/Wio_Tracker_1110_Examples/**/*.ino', recursive=True))
+    elif variant == 'tracker_t1000_e_lorawan':
+        all_examples += list(glob.iglob('Tracker_T1000_E_LoRaWAN_Examples/**/*.ino', recursive=True))
     else:
         all_examples += list(glob.iglob('libraries/Wire/**/*.ino', recursive=True))
         all_examples += list(glob.iglob('libraries/Adafruit_TinyUSB_Arduino/**/*.ino', recursive=True))
@@ -48,6 +50,8 @@ def build_examples(variant):
     
     if variant == 'wio_tracker_1110':
         fqbn = "Seeeduino:nrf52:{}:softdevice={},debug_output={},usb_cdc={},power_supply_grove={},lbm_custom={}".format(variant, 's140v6', 'serial', 'enable', 'on', 'sensecap')
+    elif variant == 'tracker_t1000_e_lorawan':
+        fqbn = "Seeeduino:nrf52:{}:softdevice={},debug_output={},usb_cdc={}".format(variant, 's140v6', 'serial', 'enable')
     else:
         fqbn = "Seeeduino:nrf52:{}:softdevice={},debug=l0".format(variant, 's140v6' if variant != 'feather52832' else 's132v6')
 
